@@ -68,6 +68,31 @@ def atualizar_arquivo(arquivo_estudantes):
             arquivo.write(f'Curso: {estudant["Curso"]}\n')
         
     print(f'O arquivo {arquivo_estudantes} foi atualizado!')
+
+def consultar(arquivo_estudantes):
+    nome = input('Digite o nome do estudante: ')
+    estudantes = []
+
+    with open(arquivo_estudantes, 'r') as arquivo:
+        estudante = {}
+        for linha in arquivo:
+            chave, valor = linha.strip().split(': ')
+            estudante[chave] = valor
+            if chave == 'Curso':
+                estudantes.append(estudante.copy())
+                estudante.clear()
+    
+    encontrado = False
+    
+    for estudante in estudantes:
+        if estudante.get('Nome') == nome:
+            encontrado = True
+            print(f'Nome: {estudante.get("Nome", "N/A")}')
+            print(f'Idade: {estudante.get("Idade", "N/A")}')
+            print(f'Curso: {estudante.get("Curso", "N/A")}')
+    
+    if not encontrado:
+        print('O estudante não se encontra no arquivo!')
     
 estudantes = []
 estudantes = pedir_infor(estudantes)
@@ -75,9 +100,12 @@ arquivo_estudantes = 'arquivo_est.txt'
 arquivo_estudantes = salvar_arquivo(arquivo_estudantes, estudantes)
 
 while True:
-    resposta = input('Digite 2 para verificar o arquivo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
+    resposta = input('Digite 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
     
-    if resposta == '2':
+    if resposta == '3':
+        consultar(arquivo_estudantes)
+        
+    elif resposta == '2':
         mostrar_arquivo(arquivo_estudantes)
     
     elif resposta == '1':
