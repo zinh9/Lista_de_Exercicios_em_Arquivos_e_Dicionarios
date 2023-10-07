@@ -129,6 +129,22 @@ def remover(arquivo_estudantes):
         print('O estudante não está no arquivo!')
     
     return arquivo_estudantes
+
+def media_idade(arquivo_estudantes):
+    media = 0
+    estudante = {}
+    idades = []
+    
+    with open(arquivo_estudantes, 'r') as arquivo:
+        for linha in arquivo:
+            chave, valor = linha.strip().split(': ')
+            
+            if chave == 'Idade':
+                idades.append(int(valor))
+    
+    media = sum(idades) / len(idades)
+        
+    print(f'A média das idades dos estudantes é de {int(media)} anos!')
     
 estudantes = []
 estudantes = pedir_infor(estudantes)
@@ -136,9 +152,12 @@ arquivo_estudantes = 'arquivo_est.txt'
 arquivo_estudantes = salvar_arquivo(arquivo_estudantes, estudantes)
 
 while True:
-    resposta = input('Digite 4 para remover um estudante, 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
+    resposta = input('Digite 5 para ver a idade média dos estudantes, 4 para remover um estudante, 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
     
-    if resposta == '4':
+    if resposta == '5':
+        media_idade(arquivo_estudantes)
+        
+    elif resposta == '4':
         remover(arquivo_estudantes)
         
     elif resposta == '3':
