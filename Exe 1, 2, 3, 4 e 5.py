@@ -68,6 +68,8 @@ def atualizar_arquivo(arquivo_estudantes):
             arquivo.write(f'Curso: {estudant["Curso"]}\n')
         
     print(f'O arquivo {arquivo_estudantes} foi atualizado!')
+    
+    return arquivo_estudantes
 
 def consultar(arquivo_estudantes):
     nome = input('Digite o nome do estudante: ')
@@ -93,6 +95,40 @@ def consultar(arquivo_estudantes):
     
     if not encontrado:
         print('O estudante não se encontra no arquivo!')
+
+def remover(arquivo_estudantes):
+    nome = input('Digite o nome do estudante que deseja remover: ')
+    estudante = {}
+    estudantes = []
+    removido = None
+    
+    with open(arquivo_estudantes, 'r') as arquivo:
+        for linha in arquivo:
+            chave, valor = linha.strip().split(': ')
+            estudante[chave] = valor
+            
+    estudantes.append(estudante)
+    
+    for estudant in estudantes:
+        if estudant['Nome'] == nome:
+            removido = estudant
+            break
+    
+    if removido:
+        estudantes.remove(removido)
+        
+        with open(arquivo_estudantes, 'w') as arquivo:
+            for estudant in estudantes:
+                arquivo.write(f'Nome: {estudant["Nome"]}')
+                arquivo.write(f'Idade: {estudant["Idade"]}')
+                arquivo.write(f'Curso: {estudant["Curso"]}')
+        
+        print(f'O estudante {nome} foi removido!')
+    
+    else:
+        print('O estudante não está no arquivo!')
+    
+    return arquivo_estudantes
     
 estudantes = []
 estudantes = pedir_infor(estudantes)
@@ -100,9 +136,12 @@ arquivo_estudantes = 'arquivo_est.txt'
 arquivo_estudantes = salvar_arquivo(arquivo_estudantes, estudantes)
 
 while True:
-    resposta = input('Digite 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
+    resposta = input('Digite 4 para remover um estudante, 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
     
-    if resposta == '3':
+    if resposta == '4':
+        remover(arquivo_estudantes)
+        
+    elif resposta == '3':
         consultar(arquivo_estudantes)
         
     elif resposta == '2':
