@@ -1,6 +1,6 @@
 def pedir_infor(estudantes):
     while True:
-        nome = input('Digite seu nome (digite "sair" para encerrar): ')
+        nome = input('\nDigite seu nome (digite "sair" para encerrar): ')
         
         if nome.lower() == 'sair':
             break
@@ -25,7 +25,7 @@ def salvar_arquivo(arquivo_estudantes, estudantes):
             arquivo.write(f'Idade: {estudante["Idade"]}\n')
             arquivo.write(f'Curso: {estudante["Curso"]}\n')
     
-    print(f'As informações foram salvas no arquivo {arquivo_estudantes}')
+    print(f'\nAs informações foram salvas no arquivo {arquivo_estudantes}.')
     
     return arquivo_estudantes
 
@@ -45,7 +45,7 @@ def atualizar_arquivo(arquivo_estudantes):
             estudante[chave] = valor
         
     while True:
-        nome = input('Digite seu nome (digite sair para encerrar): ')
+        nome = input('\nDigite seu nome (digite sair para encerrar): ')
         
         if nome == 'sair':
             break
@@ -67,12 +67,12 @@ def atualizar_arquivo(arquivo_estudantes):
             arquivo.write(f'Idade: {estudant["Idade"]}\n')
             arquivo.write(f'Curso: {estudant["Curso"]}\n')
         
-    print(f'O arquivo {arquivo_estudantes} foi atualizado!')
+    print(f'\nO arquivo {arquivo_estudantes} foi atualizado!')
     
     return arquivo_estudantes
 
 def consultar(arquivo_estudantes):
-    nome = input('Digite o nome do estudante: ')
+    nome = input('\nDigite o nome do estudante: ')
     estudantes = []
 
     with open(arquivo_estudantes, 'r') as arquivo:
@@ -91,13 +91,13 @@ def consultar(arquivo_estudantes):
             encontrado = True
             print(f'Nome: {estudante.get("Nome", "N/A")}')
             print(f'Idade: {estudante.get("Idade", "N/A")}')
-            print(f'Curso: {estudante.get("Curso", "N/A")}')
+            print(f'Curso: {estudante.get("Curso", "N/A")}\n')
     
     if not encontrado:
-        print('O estudante não se encontra no arquivo!')
+        print('\nO estudante não se encontra no arquivo!')
 
 def remover(arquivo_estudantes):
-    nome = input('Digite o nome do estudante que deseja remover: ')
+    nome = input('\nDigite o nome do estudante que deseja remover: ')
     estudante = {}
     estudantes = []
     removido = None
@@ -123,10 +123,10 @@ def remover(arquivo_estudantes):
                 arquivo.write(f'Idade: {estudant["Idade"]}')
                 arquivo.write(f'Curso: {estudant["Curso"]}')
         
-        print(f'O estudante {nome} foi removido!')
+        print(f'\nO estudante {nome} foi removido!')
     
     else:
-        print('O estudante não está no arquivo!')
+        print('\nO estudante não está no arquivo!')
     
     return arquivo_estudantes
 
@@ -144,7 +144,24 @@ def media_idade(arquivo_estudantes):
     
     media = sum(idades) / len(idades)
         
-    print(f'A média das idades dos estudantes é de {int(media)} anos!')
+    print(f'\nA média das idades dos estudantes é de {int(media)} anos!')
+
+def estudantes_curso(arquivo_estudantes):
+    cursos_alunos = {}
+    
+    with open(arquivo_estudantes, 'r') as arquivo:
+        for linha in arquivo:
+            chave, valor = linha.strip().split(': ')
+            
+            if chave == 'Curso':
+                curso = valor
+                
+                if curso not in cursos_alunos:
+                    cursos_alunos[curso] = 0
+                cursos_alunos[curso] += 1
+    
+    for curso, num_alunos in cursos_alunos.items():
+        print(f'Curso: {curso}, Número de Alunos: {num_alunos}')
     
 estudantes = []
 estudantes = pedir_infor(estudantes)
@@ -152,9 +169,12 @@ arquivo_estudantes = 'arquivo_est.txt'
 arquivo_estudantes = salvar_arquivo(arquivo_estudantes, estudantes)
 
 while True:
-    resposta = input('Digite 5 para ver a idade média dos estudantes, 4 para remover um estudante, 3 para consultar um estudante pelo nome, 2 para verificar o arquivo por completo, 1 para atualizar o arquivo, ou 0 para encerrar o programa: ')
+    resposta = input('\nSobre o arquivo, escolha uma das opções abaixo e digite a opção:\n\n6) Para ver quantos estudantes tem em cada curso.\n5) Para ver a média das idades dos estudantes.\n4) Para remover um estudante do arquivo.\n3) Para consultar um estundate pelo nome para ver suas informações.\n2) Para visualizar o arquivo todo.\n1) Para adicionar um novo estudante.\n0) Para encerrar o programa.\n\nOpção: ')
     
-    if resposta == '5':
+    if resposta == '6':
+        estudantes_curso(arquivo_estudantes)
+        
+    elif resposta == '5':
         media_idade(arquivo_estudantes)
         
     elif resposta == '4':
