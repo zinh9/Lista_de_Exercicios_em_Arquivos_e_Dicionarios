@@ -1,3 +1,5 @@
+import csv
+
 def compras(lista_compras):
     compra = {}
 
@@ -19,7 +21,7 @@ def adicionar_arq(arquivo_compras, lista_compras):
     with open (arquivo_compras, 'w') as arquivo:
         for compra in lista_compras:
             for produto, preco in compra.items():
-                arquivo.write(f'{produto}: {preco}')
+                arquivo.write(f'{produto}: {preco}\n')
     
     return arquivo_compras
 
@@ -35,14 +37,12 @@ def nova_compra(arquivo_compras, lista_compras):
     with open (arquivo_compras, 'a') as arquivo:
         for novo in lista_compras:
             for novo_produto, novo_preco in novo.items():
-                arquivo.write(f'{novo_produto}: {novo_preco}')
-                print('A compra foi adicionada!')
+                arquivo.write(f'{novo_produto}: {novo_preco}\n')
     
     return arquivo_compras, lista_compras
 
 def atualizar_preco(arquivo_compras, lista_compras):
     nome_produto = input('Digite o nome do produto que deseja atualizar o preço: ')
-    atualizado = False
 
     for compra in lista_compras:
         for produto, preco in compra.items():
@@ -50,20 +50,16 @@ def atualizar_preco(arquivo_compras, lista_compras):
                 novo_preco = float(input('Digite o novo preço do produto: '))
                 preco = novo_preco
                 compra[produto] = preco
-                atualizado = True
 
                 with open (arquivo_compras, 'w') as arquivo:
                     for compra in lista_compras:
                         for produto, preco in compra.items():
-                            arquivo.write(f'{produto}: {preco}')
+                            arquivo.write(f'{produto}: {preco}\n')
 
-    if atualizado == True:
-        print('O produto foi atualizado!')
-        return arquivo_compras, lista_compras
+        else:
+            print('O produto não está no arquivo!')
     
-    else:
-        print('O produto não está no arquivo!')
-        return None
+    return arquivo_compras, lista_compras
 
 def valor_total(lista_compras):
     total = []
@@ -97,6 +93,6 @@ def opcao(arquivo_compras, lista_compras):
 
 lista_compras = []
 lista_compras = compras(lista_compras)
-arquivo_compras = 'arquivo_compras.txt'
+arquivo_compras = 'arquivo_compras.csv'
 arquivo_compras = adicionar_arq(arquivo_compras, lista_compras)
 opcao(arquivo_compras, lista_compras)
