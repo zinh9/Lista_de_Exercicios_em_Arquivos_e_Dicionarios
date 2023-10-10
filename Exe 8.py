@@ -1,89 +1,131 @@
-def adicionar_ctt(lista_ctt):
-    ctt = {}
+def info_ctt(lista_ctts):
+    contato = {}
     
     while True:
-        nome = input('Digite o nome do contato (digite sair para encerrar o programa): ')
+        nome = input('Digite o nome do contato (digite "sair" para encerrar: ')
         
         if nome == 'sair':
             break
         
-        tel = int(input('Digite o número de telefone do contato (com DDD): '))
+        tel = int(input('Digite o número de telefone com DDD: '))
         
-        ctt[nome] = tel
-        lista_ctt.append(ctt)
+        contato = {
+            'Nome': nome,
+            'Telefone': tel
+        }
+        
+        lista_ctts.append(contato)
     
-    return lista_ctt
-    
-def salvar_ctts(lista_ctt, arq_ctt):
-    with open(arq_ctt, 'w') as arquivo:
-        for ctt in lista_ctt:
-            for chave, valor in ctt.items():
-                arquivo.write(f'{chave}: {valor}')
-    
-    print(f'Os contatos foram salvos no arquivo {arq_ctt}!')
-    
-    return arq_ctt
+    return lista_ctts
 
-def adicionar(arq_ctt):
+def adicionar_arq(arq_ctts, lista_ctts):
+    with open (arq_ctts, 'w') as arquivo:
+        for contato in lista_ctts:
+            arquivo.write(f'Nome: {contato["Nome"]}\n')
+            arquivo.write(f'Telefone: {contato["Telefone"]}\n')
+    
+    return arq_ctts
+
+def novo_ctt(arq_ctts, lista_ctts):
     nome = input('Digite o nome do contato: ')
-    tel = int(input('Digite o número de telefone do contato (com DDD): '))
+    tel = int(input('Digite o número de telefone do contato com DDD: '))
     
-    with open(arq_ctt, 'a') as arquivo:
-        arquivo.write(f'{nome}: {tel}')
+    contato = {
+        'Nome': nome,
+        'Telefone': tel
+    }
     
-    return arq_ctt
-
-def visualizar(arq_ctt):
-    with open(arq_ctt, 'r') as arquivo:
+    lista_ctts.append(contato)
+    
+    with open (arq_ctts, 'a') as arquivo:
+        for ctt in lista_ctts:
+            arquivo.write(f'Nome: {ctt["Nome"]}\n')
+            arquivo.write(f'Telefone: {ctt["Telefone"]}\n')
+            
+    return arq_ctts, lista_ctts
+    
+def mostrar(arq_ctts):
+    with open (arq_ctts, 'r') as arquivo:
         for linha in arquivo:
             print(linha)
 
-def atualizar(arq_ctt):
-    nome = input('Digite o nome do contato que deseja atualizar: ')
-    novo_tel = int(input('Digite o novo número de telefone do contato: '))
-    ctt = {}
-    ctts = []
+def atualizar(arq_ctts, lista_ctts):
+    nome = input('Digite o nome do contato: ')
     
-    with open(arq_ctt, 'r') as arquivo:
-        for linha in arquivo:
-            chave, valor = linha.strip().split(': ')
-            ctt[chave] = valor
-    
-    ctts.append(ctt)
-    
-    if nome not in ctts:
-        print('O nome não está no arquivo!')
-        return None
+    for contato in lista_ctts:
+        if nome == contato['Nome']:
+            opcao = input('Digite a opção que deseja atualizar (nome/telefone ou nome e telefone): ')
         
-    for cont in ctts:
-        for chave, valor in cont.items():
-            if chave == nome:
-                valor = novo_tel
-                chave = valor
-                break
+            if opcao == 'nome':
+                nome_at = input('Digite o novo nome do contato: ')
+                
+                contato['Nome'] = nome
+            
+            elif opcao == 'telefone':
+                tel_at = int(input('Digite o novo número de telefone: '))
+                
+                contato['Telefone'] = tel_at
+            
+            elif opcao == 'nome' and opcao == 'telefone':
+                nome_at = input('Digite o novo nome do contato: ')
+                tel_at = int(input('Digite o novo número de telefone: '))
+                
+                contato['Nome'] = nome_at
+                contato['Telefone'] = tel_at
+        
+        else:
+            print('O nome não está no arquivo!')
     
-    with open(arq_ctt, 'w') as arquivo:
-        for cont in ctts:
-            for chave, valor in cont.items():
-                arquivo.write(f'{chave}: {valor}')
+    with open (arq_ctts, 'w') as arquivo:
+        for contato in lista_ctts:
+            arquivo.write(f'Nome: {contato["Nome"]}\n')
+            arquivo.write(f'Telefone: {contato["Telefone"]}\n')
     
-    print('O novo número de telefone foi atualizado no arquivo')
-    
-    return arq_ctt
-    
-lista_ctt = []
-lista_ctt = adicionar_ctt(lista_ctt)
-arq_ctt = 'arquivo_ctt.txt'
-arq_ctt = salvar_ctts(lista_ctt, arq_ctt)
+    return arq_ctts, lista_ctts
 
-while True:
-    resp = input('Segue as opções abaixo e escolha:\n\4) Para adicionar um novo contato.\n3) Para visualizar a lista de contatos.\n2) Para atualizar a lista de contatos.\n1) Para remover um contato.\n0) Para encerrar o programa')
+def remover(arq_ctts, lista_ctts):
+    nome = input('Digite o nome do contato que deseja remover: ')
     
-    if resp == '4':
-        arq_ctt = adicionar(arq_ctt)
+    for contato in lista_ctts:
+        if nome == contato['Nome']:
+            lista_ctts.remove(contato)
+            print('O contato foi removido do arquivo!')
+            
+            with open(arq_ctts, 'w') as arquivo:
+                for contato in lista_ctts:
+                    arquivo.write(f'Nome: {contato["Nome"]}\n')
+                    arquivo.write(f'Telefone: {contato["Telefone"]}\n')
+        
+        else:
+            print('O nome não está no arquivo!')
     
-    elif resp == '3':
-        visualizar(arq_ctt)
+    return arq_ctts, lista_ctts
     
-    elif resp == '2':
-        arq_ctt = atualizar(arq_ctt)
+def opcao(arq_ctts, lista_ctts):
+    while True:
+        resposta = input('Escolha uma das opções abaixo:\n\n4) Para adicionar um novo contato.\n3) Para visualizar os contatos.\n2) Para atualizar um contato do arquivo.\n1) Para remover um contato do arquivo.\n0) Para encerrar o programa\n\nOpção: ')
+        
+        if resposta == '4':
+            arq_ctts, lista_ctts = novo_ctt(arq_ctts, lista_ctts)
+        
+        elif resposta == '3':
+            mostrar(arq_ctts)
+        
+        elif resposta == '2':
+            arq_ctts, lista_ctts = atualizar(arq_ctts, lista_ctts)
+        
+        elif resposta == '1':
+            arq_ctts, lista_ctts = remover(arq_ctts, lista_ctts)
+        
+        elif resposta == '0':
+            print('Obrigado :)')
+            break
+        
+        else:
+            print('Digite um dos números mencionados!')
+
+lista_ctts = []
+lista_ctts = info_ctt(lista_ctts)
+arq_ctts = 'arquivo_contatos.txt'
+arq_ctts = adicionar_arq(arq_ctts, lista_ctts)
+opcao(arq_ctts, lista_ctts)
